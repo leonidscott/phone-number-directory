@@ -3,8 +3,6 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def- directory (atom get-seed-data))
-
 (defn- csv-data->maps
   "header is a vector of keywords [:h0 ... :hn]
    [[line0], [line1], ... [line n]] ->
@@ -24,7 +22,7 @@
       stripped-phone-number
       (str "+1" stripped-phone-number))))
 
-(defn- get-seed-data
+(defn get-seed-data
   "Returns a map:
     {phone-number -> {:phone-number (E.164 Format), :context, :caller-id}}
    from file interview-callerid-data.csv.
@@ -35,3 +33,7 @@
        (csv-data->maps [:phone-number :context :name])
        (map #(update % :phone-number e164-convert)) ;convert phone-numbers to e164
        (group-by :phone-number)))
+
+(defn func [] 5)
+
+(def ^:private directory (atom (get-seed-data)))
