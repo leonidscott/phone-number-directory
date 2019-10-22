@@ -42,7 +42,9 @@
                             :source-paths ["env/dev/src"]
                             :dependencies [[figwheel-sidecar "0.5.13"]
                                            [org.clojure/tools.nrepl "0.2.13"]
-                                           [com.cemerick/piggieback "0.2.2"]]
+                                           [com.cemerick/piggieback "0.2.2"]
+                                           [midje "1.9.9"]]
+                            :plugins      [[lein-midje "3.2.1"]]
                             :figwheel     {:nrepl-port       7000
                                            :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
                             :cljsbuild    {:builds {:app

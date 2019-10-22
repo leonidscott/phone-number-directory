@@ -10,7 +10,8 @@
     [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
     [ring.middleware.reload :refer [wrap-reload]]
     [ring.middleware.webjars :refer [wrap-webjars]]
-    [ring.util.response :refer [response]]))
+    [ring.util.response :refer [response]]
+    [phone-number-directory.directory :as directory]))
 
 (defn render-home-page
   []
@@ -42,6 +43,10 @@
   []
   (immutant/run handler {:port 8080}))
 
+;(defn -main
+;  [& args]
+                                        ;  (run-server))
+
 (defn -main
   [& args]
-  (run-server))
+  (println (directory/func "a")))

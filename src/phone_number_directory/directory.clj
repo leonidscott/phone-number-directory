@@ -22,7 +22,7 @@
       stripped-phone-number
       (str "+1" stripped-phone-number))))
 
-(defn get-seed-data
+(defn- get-seed-data
   "Returns a map:
     {phone-number -> {:phone-number (E.164 Format), :context, :caller-id}}
    from file interview-callerid-data.csv.
@@ -34,6 +34,6 @@
        (map #(update % :phone-number e164-convert)) ;convert phone-numbers to e164
        (group-by :phone-number)))
 
-(defn func [] 5)
-
 (def ^:private directory (atom (get-seed-data)))
+
+(defn func [hi] (map inc [1 2 3]))
