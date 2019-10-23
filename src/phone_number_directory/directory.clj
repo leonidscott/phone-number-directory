@@ -4,7 +4,7 @@
 
 (def ^:private directory (atom (csv/get-seed-data)))
 
-(defn deref-atom
+(defn- deref-atom
   "For testing, the tests need to redirect any derefs of directory.
    Midje cannot mock deref, but it can mock this function"
   [atom]
