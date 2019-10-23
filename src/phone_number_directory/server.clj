@@ -49,4 +49,4 @@
 
 (defn -main
   [& args]
-  (println (directory/func "a")))
+  (println "Hello world"))
