@@ -11,7 +11,8 @@
                  [reagent "0.7.0"]
                  [ring "1.6.2"]
                  [ring-webjars "0.2.0"]
-                 [ring/ring-defaults "0.3.1" :exclusions [javax.servlet/servlet-api]]]
+                 [ring/ring-defaults "0.3.1" :exclusions [javax.servlet/servlet-api]]
+                 [org.clojure/data.csv "0.1.4"]]
 
   :plugins       [[lein-cljsbuild "1.1.7"]
                   [lein-environ "1.1.0"]
@@ -41,7 +42,9 @@
                             :source-paths ["env/dev/src"]
                             :dependencies [[figwheel-sidecar "0.5.13"]
                                            [org.clojure/tools.nrepl "0.2.13"]
-                                           [com.cemerick/piggieback "0.2.2"]]
+                                           [com.cemerick/piggieback "0.2.2"]
+                                           [midje "1.9.9"]]
+                            :plugins      [[lein-midje "3.2.1"]]
                             :figwheel     {:nrepl-port       7000
                                            :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
                             :cljsbuild    {:builds {:app
