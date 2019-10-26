@@ -18,18 +18,32 @@
   [phone-number]
   ((deref-atom directory) (e164/convert phone-number)))
 
-(defn- record-new?
-  [record]
-  (->> (:phone-number record)
-       @directory
+;;;
+;;start of insert-record! functions
+;;;
+
+(defn- directory-contains?
+  "(record-filter) must take two record maps as arguments, and return a boolean.
+   Checks if a (record-filter) relationsip exists between the inputed record,
+   and any other record in atom, directory."
+  [record-filter {:keys [phone-number] :as record}]
+  (let [records (@directory phone-number)]
+    (-> (filter #(record-filter record %) records)
+        not-empty)))
+
+(defn- new-phone-number?
+  "Takes a record map (with an e164 phone-number)
+   Returns true if the the record does not exist within directory, false if not"
+  [{:keys [phone-number]}]
+  (->> (@directory phone-number)
        not))
 
 (defn- identical-record?
-  [record]
-  (let [records (@directory (:phone-number record))]
-    (not-empty (filter #(= % record) records))))
+  [record1 record2]
+  (= record1 record2))
 
-(defn- name-context-conflict?
+(defn- pn-context-conflict?
+  "Takes two record maps (with e164 records)"
   [{phone-number1 :phone-number context1 :context name1 :name}
    {phone-number2 :phone-number context2 :context name2 :name}]
   (and (= phone-number1 phone-number2)
@@ -38,7 +52,12 @@
 
 (defn insert-record!
   [{:keys [phone-number context name] :as record}]
-  (let [e164-pn (e164/convert phone-number)]
+  (let [e164-pn (e164/convert phone-number)
+        e164-record (assoc record :phone-number e164-pn)]
     (cond
-      (record-new? e164-pn) (swap! directory assoc e164-pn (vec record))
+      (new-phone-number? e164-record) (swap! directory assoc e164-pn [record])
       )))
+
+;;;
+;; end of insert-record! functions
+;;;
