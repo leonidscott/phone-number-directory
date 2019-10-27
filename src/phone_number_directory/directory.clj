@@ -75,17 +75,3 @@
 ;;;
 ;; end of insert-record! functions
 ;;;
-
-(defn insert-record-2!
-  [{:keys [phone-number context name] :as record}]
-  (let [e164-pn (e164/convert phone-number)
-        e164-record (assoc record :phone-number e164-pn)
-        record-has? (partial #(directory-contains? % e164-record))]
-    (cond
-      (new-phone-number? e164-record) (swap-directory! assoc e164-pn [record])
-      (record-has? identical-record?) nil
-      (record-has? pn-context-conflict?)
-        (throw (Exception. "phone-number-context-conflict"))
-      :else (swap-directory! update e164-pn conj e164-record)
-    )
-    e164-record))
