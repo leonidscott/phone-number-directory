@@ -34,28 +34,6 @@
 ;;insert-record! tests
 ;;;
 
-(fact "(insert-record!): new record tests"
-      (with-redefs [dir/directory {}] ;to avoid importing the csv file
-        (let [new-pn "+22222222222"
-              new-record {:phone-number new-pn
-                          :context "context2-0"
-                          :name "name2-0"}
-              test-atom (atom directory-initial)]
-          (with-state-changes [(before :facts (reset! test-atom directory-initial))]
-            (fact "When a record contains a previously unseen phone-number,
-                   insert-record! will add a new key value pair to directory"
-                  (do (dir/insert-record! new-record)
-                      @test-atom) => (assoc directory-initial new-pn [new-record])
-                  (provided (#'dir/deref-directory) => @test-atom
-                            (#'dir/swap-directory! assoc new-pn [new-record])
-                            => (swap! test-atom assoc new-pn [new-record])))
-            (fact "When a record contains a previously unseen phone-number,
-                   insert-record! will return that same record"
-                  (dir/insert-record! new-record) => new-record
-                  (provided (#'dir/deref-directory) => @test-atom
-                            (#'dir/swap-directory! assoc new-pn [new-record])
-                            => (swap! test-atom assoc new-pn [new-record])))))))
-
 (def test-atom (atom directory-initial))
 
 (fact "(insert-record!): new record tests"
@@ -127,9 +105,7 @@
                    Directory will be updated with the new record"
                   (do (dir/insert-record! new-context-record)
                       @test-atom) => (update directory-initial
-                                             existing-pn
-                                             conj
-                                             new-context-record)
+                                             existing-pn conj new-context-record)
                   (provided (#'dir/deref-directory) => @test-atom
                             (#'dir/swap-directory! update
                                                    existing-pn conj new-context-record)
