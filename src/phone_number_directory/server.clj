@@ -11,7 +11,7 @@
     [ring.middleware.reload :refer [wrap-reload]]
     [ring.middleware.webjars :refer [wrap-webjars]]
     [ring.util.response :refer [response]]
-    [clojure.data.json :as json]
+    [clojure.edn :as edn]
     [phone-number-directory.middleware :as middleware]))
 
 (def app-routes
@@ -28,10 +28,16 @@
         (wrap-defaults h (assoc-in site-defaults [:security :anti-forgery] false))
         (wrap-webjars h)))
 
-(defn run-server
+(defn- read-config
   []
-  (immutant/run handler {:port 8080}))
+  (edn/read-string (slurp "config.edn")))
+
+(defn run-server
+  [port]
+  (immutant/run handler {:port port}))
 
 (defn -main
   [& args]
-  (run-server))
+  (-> read-config
+      :port
+      run-server))
