@@ -19,7 +19,7 @@
     (GET "/query" {{phone-number :number} :params}
         (middleware/query-middleware phone-number))
     (POST "/number" request
-          (println (middleware/number-middleware request)))
+          (middleware/number-middleware request))
     (route/not-found "not found")))
 
 (def handler
