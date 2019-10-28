@@ -4,6 +4,7 @@
             [phone-number-directory.directory :as dir]
             [phone-number-directory.middleware :as middle]))
 
+;;; query-middleware tests
 (fact "query-middleware will return status 400 when phone-number is not e164"
       (let [edn {:status 400
                  :body {:error ""}}
@@ -34,3 +35,47 @@
             json (json/write-str edn)]
         (middle/query-middleware pn) => json
         (provided (dir/phone-number->records pn) => results)))
+
+
+;;; number-middleware tests
+(fact "number-middleware returns status 400 when any of the following records are nil:
+       number, context, name"
+      (let [record {:number "+5" :context "context"} ;missing name
+            err-msg (str "one or more fileds in " (json/write-str record) " are nil")
+            err-edn {:status 400
+                     :body {:error err-msg}}
+            err-json (json/write-str err-edn)]
+        (middle/number-middleware anything) => err-json
+        (provided (#'middle/unmarshal-number anything) => record)))
+
+(fact "number-middleware returns status 400 when number is not a e164 phone-number"
+      (let [record {:number "abc" :context "context" :name "name"}
+            err-msg (format "phone-number %s is not e-164" (:number record))
+            err-edn {:status 400
+                     :body {:error err-msg}}
+            err-json (json/write-str err-edn)]
+        (middle/number-middleware anything) => err-json
+        (provided (#'middle/unmarshal-number anything) => record)))
+
+(fact "number-middleware returns status 400 when a record has a phone-number-context conflict"
+      (let [err-msg "phone-number-context-conflict"
+            err-edn {:status 400
+                     :body {:error err-msg}}
+            err-json (json/write-str err-edn)]
+        (middle/number-middleware anything) => err-json
+        (provided (#'middle/unmarshal-number anything)
+                    => {:number "+11111111111" :context "context" :name "name"}
+                  (dir/insert-record! anything)
+                    => (throw (ex-info err-msg {:message err-msg})))))
+
+(fact "number-middleware returns state 100 and the inserted record
+       when record does not have nil number, context, or name,
+       has valid e164 phone number,
+       and no phone-number-context conflict"
+      (let [record {:number "+11111111111" :context "context" :name "name"}
+            return-edn {:status 100
+                        :body {:confirmation record}}
+            return-json (json/write-str return-edn)]
+        (middle/number-middleware anything) => return-json
+        (provided (#'middle/unmarshal-number anything) => record
+                  (dir/insert-record! anything) => record)))
