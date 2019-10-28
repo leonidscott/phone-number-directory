@@ -68,7 +68,8 @@
       (new-phone-number? e164-record) (swap-directory! assoc e164-pn [record])
       (record-has? identical-record?) nil
       (record-has? pn-context-conflict?)
-        (throw (Exception. "phone-number-context-conflict"))
+      (throw (ex-info "phone-number-context-conflict"
+                      {:message "phone-number-context-conflict"}))
       :else (swap-directory! update e164-pn conj e164-record))
     e164-record))
 
