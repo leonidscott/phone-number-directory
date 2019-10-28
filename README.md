@@ -8,6 +8,10 @@ Once the repository is cloned:
 ```
 lein run
 ```
+4. To test:  
+```
+lein midje
+```
 
 Here are sample curl commands:  
 **GET Request:**
@@ -52,6 +56,7 @@ I ran into scoping and type issues with *with-redefs*. In particular, midje woul
           (#'dir/swap-directory! update ...)
             => (swap! test-atom update ...))
 ```
+I am sure there are more airtight ways to do this, I would just need more time to find them.
 
 **Make tests more modular:** A lot of the test logic is repetitive. By introducing functions like `tabular` and `prerequisites`, a lot of mocking statements could be consolidated. However, too much consolidation would lead to gigantic testing forms that would be confusing to navigate.  
 In addition, there is room to add more metaconstants to increase the generality of the tests.  
