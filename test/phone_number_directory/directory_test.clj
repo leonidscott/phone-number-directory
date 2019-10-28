@@ -91,7 +91,7 @@
             (fact "When a record has a phone-number context conflict,
                    insert-record! will throw an Exception"
                   (dir/insert-record! conflict-record)
-                  => (throws Exception "phone-number-context-conflict")
+                    => (throws Exception "phone-number-context-conflict")
                   (provided (#'dir/deref-directory) => @test-atom))))))
 
 (fact "(insert-record!): regular insertion"
