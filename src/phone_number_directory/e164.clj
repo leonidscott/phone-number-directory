@@ -16,3 +16,7 @@
     (if (str/includes? stripped-phone-number "+")
       stripped-phone-number
       (str "+1" stripped-phone-number))))
+
+(defn is-e164?
+  [str]
+  (re-matches #"^\+?[1-9]\d{1,14}$" str))
