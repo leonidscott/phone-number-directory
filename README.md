@@ -26,7 +26,7 @@ I used *Clojure.data.csv* to read from the csv, *Clojure.data.json* for `edn/jso
 ### Code structure  
 ![schematic](img/schematic.png)  
 
-In order to optimize for faster lookup by phone-number, I grouped the csv records by phone-number. 
+In order to optimize for faster lookup by phone-number, I grouped the csv records by phone-number.
 
 ### Thins to improve on
 Given the short lead time, and the short lifespan of the code, I made certain trade offs. Here were some things, given more time I would address:  
@@ -58,6 +58,6 @@ In addition, there is room to add more metaconstants to increase the generality 
 
 **Configurable CSV file name:** With more time, I would add the name of the csv file to `config.edn` and pass that to `csv_import.clj`. This would allow the csv file name to be configurable just like the port number.  
 
-**Front End:**  I would have loved to make a little front end to launch requests easier. Most of the infrastructure is already there with the template I am using.  
+**Front End:**  I would have loved to make a little front end to launch requests more easily. Most of the infrastructure for a front end is already there with the template I am using.  
 
 **Continuous Integration:** I typically use TravisCI for this.
