@@ -23,7 +23,10 @@ Originally, I had plans to build a small front end to make it easier to launch r
 
 I used *Clojure.data.csv* to read from the csv, *Clojure.data.json* for `edn/json` conversions, *Clojure.edn* for reading from the config, and *midje* for testing.  
 
-![schematic](img/schematic.png)
+### Code structure  
+![schematic](img/schematic.png)  
+
+In order to optimize for faster lookup by phone-number, I grouped the csv records by phone-number. 
 
 ### Thins to improve on
 Given the short lead time, and the short lifespan of the code, I made certain trade offs. Here were some things, given more time I would address:  
