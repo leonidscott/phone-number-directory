@@ -32,7 +32,7 @@ I used *Clojure.data.csv* to read from the csv, *Clojure.data.json* for `edn/jso
 
 In order to optimize for faster lookup by phone-number, I grouped the csv records by phone-number.
 
-### Thins to improve on
+### Things to improve on
 Given the short lead time, and the short lifespan of the code, I made certain trade offs. Here were some things, given more time I would address:  
 
 **Make tests less intrusive:**  I like using midje because, for the most part, I never have to change code in order to make it more testable. However, when working on tests for `directory.clj` I had to make some concessions. At the heart of directory.clj is a private atom that holds all phone-number information. It is initialized to start drawing data from the csv file:
