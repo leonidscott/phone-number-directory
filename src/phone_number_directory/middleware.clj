@@ -4,6 +4,8 @@
             [phone-number-directory.e164 :as e164]))
 
 (defn- json-marshaller
+  "Takes the intended body of a responce in edn, and optionally, a http status
+   returns json with a status and body"
   ([body]
    (json-marshaller 100 body))
   ([status body]
@@ -11,8 +13,10 @@
                     :body body})))
 
 (defn- match-err-on-msg
-  [exp msg]
-  (= (:message (ex-data exp)) msg))
+  "err must be have a message key in its ex-data map.
+   returns true if the err's message is the same as msg"
+  [err msg]
+  (= (:message (ex-data err)) msg))
 
 (defn- e164-gate
   [phone-number]
@@ -30,6 +34,7 @@
                     {:message "no results exist for phone-number %s"}))))
 
 (defn query-middleware
+  "implements query request. Returns results in http response ready json."
   [phone-number]
   (try
     (-> phone-number
@@ -56,6 +61,8 @@
       :body))
 
 (defn- nil-gate
+  "are either number, context, or name nil?
+   if so, throw err, if not, return record"
   [{:keys [number context name] :as record}]
   (if (and number context name)
     record
@@ -65,15 +72,22 @@
                                    " are nil")}))))
 
 (defn- number->phone-number
+  "takes a record map, converts number key to phone number key.
+   returns a new record map"
   [{:keys [number context name]}]
   {:phone-number number :context context :name name})
 
 (defn- pn-is-e164
+  "is the phone-number key e164?
+   if not, throw err, if so, return record"
   [{:keys [phone-number] :as record}]
   (e164-gate phone-number)
   record)
 
 (defn number-middleware
+  "handles number request, returns http ready json
+   unmarshalls request, checks inputs, completes requests, and marshals results.
+   handles errors, returns http ready json with error code and message"
   [request]
   (let [record (unmarshal-number request)
         nil-msg (str "one or more fileds in " (json/write-str record) " are nil")
